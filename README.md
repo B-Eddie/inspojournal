@@ -1,11 +1,10 @@
 # inspojournal
 
 Add
-- page for writing
-- add quote page - make it popups
-- I can add inspos right in some tab, comes with time stamp
+- clickable house - page for writing
+- popup add quote page
+- make the quotes/inspos fish, they should move around, comes with time stamp
 - nostalgic music (spotify in corner)
-- save quote to database
 
 Themes
 - page for writing, have some mountain in the distance with a person looking with binoculars takes you to writing when you click it

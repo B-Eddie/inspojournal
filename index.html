@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InspoJournal</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="main.js" defer></script>
 </head>
 <body>
@@ -21,9 +22,11 @@
             <h2>New Quote</h2>
 
             <div contenteditable="true" id="addMessage"></div>
-
-            <div onclick="submitText()">Submit</div>
-            <div onclick="closePopup()">Cancel</div>
+            
+            <div class="buttonRow">
+                <div class=button onclick="submitText()">Submit</div>
+                <div class=button onclick="closePopup()">Cancel</div>
+            </div>
         </div>
     </div>
 

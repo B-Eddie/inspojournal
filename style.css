@@ -24,6 +24,10 @@ h1 {
     cursor: pointer;
 }
 
+h2 {
+    background-color: white;
+}
+
 #popup.hidden{
     display: none;
 }
@@ -40,10 +44,50 @@ h1 {
     align-items: center;
 }
 
-#addMessage {
-    width: 100%;
-    min-height: 200px;
-    border: 1px solid black;
-    margin-bottom: 10px;
+#popupContent {
+    width: 700px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
 }
 
+#addMessage {
+    width: 100%;
+    box-sizing: border-box;
+    height: 250px;
+    border: 1px solid black;
+    padding: 10px;
+    margin-bottom: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.buttonRow {
+    display: flex;
+    gap: 10px;
+    background-color: white;
+}
+
+.button {
+    width: 80px;
+    padding: 10px;
+    border: 1px solid black;
+    text-align: center;
+    cursor: pointer;
+}
+
+.deleteButton {
+    padding: 8px 12px;
+    border: 1px solid red;
+    background-color: white;
+    color: red;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.deleteButton:hover {
+    background-color: red;
+    color: white;
+}
