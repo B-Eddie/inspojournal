@@ -1,7 +1,7 @@
 const SUPABASE_URL = "https://rfohexlqbyiyjvbocqgm.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJmb2hleGxxYnlpeWp2Ym9jcWdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MjgzNjcsImV4cCI6MjA5NjUwNDM2N30.8ytC3woHL_J7TJ_X4yOrIrpMw3aviw3er8SWNM2jBao";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJmb2hleGxxYnlpeWp2Ym9jcWdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MjgzNjcsImV4cCI6MjA5NjUwNDM2N30.8ytC3woHL_J7TJ_X4yOrIrpMw3aviw3er8SWNM2jBao";
 
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 const popup = document.getElementById("popup");
 const addQuoteButton = document.getElementById("addQuoteButton");
