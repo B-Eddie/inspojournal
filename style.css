@@ -1,0 +1,49 @@
+* {
+    font-style: normal;
+    background-color: lightblue;
+}
+
+body {
+    color: navy;
+}
+
+h1 {
+    text-align:center;
+}
+
+.quote {
+    width: 150px;
+    color: pink;
+    border: 1px solid pink;
+}
+
+#addQuoteButton {
+    width: 100px;
+    padding: 15px;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+#popup.hidden{
+    display: none;
+}
+
+#popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#addMessage {
+    width: 100%;
+    min-height: 200px;
+    border: 1px solid black;
+    margin-bottom: 10px;
+}
+

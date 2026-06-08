@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspoJournal</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js" defer></script>
+</head>
+<body>
+    <h1>Inspo Journal</h1>
+
+
+    <div class="quote">Entry #1 - The start - Aug 18 2025</div>
+    <div class="quote">Entry #100 - Still the beginning - Jun 7 2026</div>
+
+    <div id="addQuoteButton">Add Quote</div>
+
+    <div id="popup" class="hidden">
+        <div id="popupContent">
+            <h2>New Quote</h2>
+
+            <div contenteditable="true" id="addMessage"></div>
+
+            <div onclick="submitText()">Submit</div>
+            <div onclick="closePopup()">Cancel</div>
+        </div>
+    </div>
+
+    <p id="output"></p>
+
+    <!--
+    - Why give something up when you can just work harder?
+    - If it gets tough, then just work harder. Everyone wants you to succeed. Everyone
+    - 
+    -->
+
+</body>
+</html>
