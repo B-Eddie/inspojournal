@@ -1,20 +1,22 @@
-const SUPABASE_URL = "https://rfohexlqbyiyjvbocqgm.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJmb2hleGxxYnlpeWp2Ym9jcWdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MjgzNjcsImV4cCI6MjA5NjUwNDM2N30.8ytC3woHL_J7TJ_X4yOrIrpMw3aviw3er8SWNM2jBao";
+const SUPABASE_URL = "https://hckhidhozjnzzeivyaqm.supabase.co";
+const SUPABASE_KEY = "sb_publishable_5ez4g3fd4YUisouFDfxBmw_B_RvPTFL";
 
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
 
 const popup = document.getElementById("popup");
 const addQuoteButton = document.getElementById("addQuoteButton");
 
-addQuoteButton.addEventListener("click", () => {
-    popup.classList.remove("hidden");
-});
+if (popup && addQuoteButton) {
+    addQuoteButton.addEventListener("click", () => {
+        popup.classList.remove("hidden");
+    });
 
-popup.addEventListener("click", (event) => {
-    if (event.target === popup) {
-        closePopup();
-    }
-});
+    popup.addEventListener("click", (event) => {
+        if (event.target === popup) {
+            closePopup();
+        }
+    });
+}
 
 function closePopup() {
     popup.classList.add("hidden")
@@ -30,9 +32,11 @@ async function submitText() {
         return;
     }
 
-    const quote = createQuoteElement(data.id, data.text);
+    const pond = document.getElementById("pond");
 
-    document.body.insertBefore(quote, document.getElementById("addQuoteButton"));
+    if (pond) {
+        pond.appendChild(createFish(data.id, data.text));
+}
 
     document.getElementById("addMessage").innerText = "";
 
@@ -61,7 +65,11 @@ function createQuoteElement(id, text) {
 }
 
 async function loadQuotes() {
-    const {data, error} = await db.from("quotes").select("*").order("created_at");
+    const pond = document.getElementById("pond");
+
+    if (!pond) return;
+
+    const { data, error } = await db.from("quotes").select("*").order("created_at");
 
     if (error) {
         console.log(error);
@@ -69,9 +77,7 @@ async function loadQuotes() {
     }
 
     data.forEach(q => {
-        const quote = createQuoteElement(q.id, q.text);
-
-        document.body.insertBefore(quote, document.getElementById("addQuoteButton"));
+        pond.appendChild(createFish(q.id, q.text));
     });
 }
 
@@ -86,4 +92,141 @@ async function deleteQuote(id, quoteElement) {
     }
 
     quoteElement.remove();
+}
+
+// writing.html JS
+async function addJournal() {
+    const text = document.getElementById("journalText").innerText;
+
+    const { data, error } = await db.from("journals").insert([{ text }]).select().single();
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    const journal = createJournalElement(data.id,data.text);
+
+    document.getElementById("journals").prepend(journal);
+    document.getElementById("journalText").innerText = "";
+}
+
+async function loadJournals() {
+    const journalsContainer = document.getElementById("journals");
+
+    if (!journalsContainer) return;
+
+    const { data } = await db.from("journals").select("*").order("created_at", { ascending: false });
+
+    data.forEach(journal => {
+        const div = createJournalElement(journal.id, journal.text);
+        journalsContainer.appendChild(div);
+    });
+}
+
+function createJournalElement(id, text) {
+    const journal = document.createElement("div");
+    journal.className = "journal";
+
+    const textDiv = document.createElement("div");
+    textDiv.textContent = text;
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.className = "deleteButton";
+
+    deleteButton.addEventListener("click", () => {
+        deleteJournal(id, journal);
+    });
+
+    journal.appendChild(textDiv);
+    journal.appendChild(deleteButton);
+
+    return journal;
+}
+
+async function deleteJournal(id, journalElement) {
+    const { error } = await db.from("journals").delete().eq("id", id);
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    journalElement.remove();
+}
+
+loadJournals();
+
+// fish
+function createFish(id, text) {
+    const fish = document.createElement("div");
+    fish.className = "fish";
+
+    fish.innerHTML = `<img src="koi.png" class="koi"><div class="fishQuote">${text}</div>`;
+
+    fish.style.left = Math.random() * 700 + "px";
+    fish.style.top = Math.random() * 400 + "px";
+
+    fish.addEventListener("click", () => {
+        if (!netEquipped) return;
+    
+        catchFish(fish, id);
+    });
+
+    startSwimming(fish);
+
+    return fish;
+}
+
+function startSwimming(fish) {
+    setInterval(() => {
+        const newX = Math.random() * 700;
+        const newY = Math.random() * 400;
+
+        fish.style.transition = "5s linear";
+        fish.style.left = newX + "px";
+        fish.style.top = newY + "px";
+    }, 3000 + Math.random() * 4000);
+}
+
+const net = document.getElementById("net");
+
+let netEquipped = false;
+
+const netHolder = document.getElementById("net");
+
+netHolder.addEventListener("click", () => {
+    netEquipped = !netEquipped;
+
+    if (!netEquipped) {
+        net.style.left = "";
+        net.style.top = "";
+        net.style.right = "20px";
+        net.style.bottom = "20px";
+    }
+});
+
+document.addEventListener("mousemove", (event) => {
+    if (!netEquipped) return;
+
+    net.style.position = "fixed";
+
+    net.style.left = event.clientX - 40 + "px";
+    net.style.top = event.clientY - 40 + "px";
+
+    net.style.right = "";
+    net.style.bottom = "";
+});
+
+async function catchFish(fish, id) {
+    await db.from("quotes").delete().eq("id", id);
+
+    fish.remove();
+
+    net.src = "net_with_fish.png";
+
+    setTimeout(() => {
+        net.src = "net.png";
+    }, 2000);
 }

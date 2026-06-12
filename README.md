@@ -1,8 +1,8 @@
 # inspojournal
 
 Add
-- clickable house - page for writing
-- popup add quote page
+- clickable house - page for writing - DONE
+- popup add quote page - DONE
 - make the quotes/inspos fish, they should move around, comes with time stamp
 - nostalgic music (spotify in corner)
 
@@ -16,3 +16,19 @@ Themes
 ![alt text](image-1.png)
 ![alt text](image-2.png)
 ![alt text](image-3.png)
+
+koi inspo: ![alt text](image-4.png)
+
+
+*Supabase:*
+create table quotes (
+  id bigint generated always as identity primary key,
+  text text not null,
+  created_at timestamp with time zone default now()
+)
+
+GRANT SELECT, INSERT ON public.quotes TO anon;
+GRANT USAGE ON SCHEMA public TO anon;
+
+GRANT DELETE ON public.quotes TO anon;
+

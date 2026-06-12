@@ -1,10 +1,10 @@
 * {
     font-style: normal;
-    background-color: lightblue;
 }
 
 body {
     color: navy;
+    background-color: lightblue;
 }
 
 h1 {
@@ -25,7 +25,7 @@ h1 {
 }
 
 h2 {
-    background-color: white;
+    background-color: lightblue;
 }
 
 #popup.hidden{
@@ -42,13 +42,18 @@ h2 {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
 
 #popupContent {
     width: 700px;
-    background: white;
+    background: lightblue;;
     padding: 20px;
     border-radius: 10px;
+}
+
+#output {
+    width: 200px;
 }
 
 #addMessage {
@@ -67,15 +72,17 @@ h2 {
 .buttonRow {
     display: flex;
     gap: 10px;
-    background-color: white;
+    background-color: lightblue;
 }
 
 .button {
-    width: 80px;
+    width: 90px;
     padding: 10px;
     border: 1px solid black;
     text-align: center;
     cursor: pointer;
+    display: block;
+    margin: 10px auto;
 }
 
 .deleteButton {
@@ -85,9 +92,88 @@ h2 {
     color: red;
     cursor: pointer;
     margin-top: 5px;
+    display: block;
+    margin: 10px auto;
 }
 
 .deleteButton:hover {
     background-color: red;
     color: white;
+}
+
+#pagoda {
+    width: 400px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1;
+}
+
+#home {
+    width: 50px;
+}
+
+#journalText {
+    width: 800px;
+    height: 500px;
+    border: 1px solid black;
+    padding: 10px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    margin: 0 auto;
+}
+
+#journals {
+    word-wrap: break-word;
+    margin: 10px; 
+}
+
+#pond {
+    position: relative;
+    width: 1000px;
+    height: 600px;
+    overflow: hidden;
+    pointer-events: auto;
+}
+
+.fish {
+    position: absolute;
+}
+
+.koi {
+    width: 120px;
+    pointer-events: none;
+}
+
+.fishQuote {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    font-size: 8px;
+    text-align: center;
+    pointer-events: none;
+}
+
+#net {
+    width: 120px;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    cursor: pointer;
+    z-index: 100;
+}
+
+#net.catching {
+    pointer-events: none;
+}
+
+#netHolder {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 120px;
+    height: 120px;
+    z-index: 99;
 }

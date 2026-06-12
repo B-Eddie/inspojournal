@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspo Journal</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="main.js" defer></script>
+</head>
+<body>
+    <h1>Inspo Journal</h1>
+
+    <a href="index.html">
+        <img src="home.png" alt="Home" id="home">
+    </a>
+
+    <div>
+        Hi you can add a journal here
+    </div>
+
+    <div contenteditable="true" id="journalText"></div>
+
+    <div class="button" onclick="addJournal()">
+        Save Journal
+    </div>
+
+    <div id="journals"></div>
+    
+</body>
+</html>
