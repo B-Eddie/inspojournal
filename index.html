@@ -17,8 +17,8 @@
 
     <div id="addQuoteButton">Add Quote</div>
 
-    <div id="popup" class="hidden">
-        <div id="popupContent">
+    <div id="popup" class="popup hidden">
+        <div class="popupContent">
             <h2>New Quote</h2>
 
             <div contenteditable="true" id="addMessage"></div>
@@ -30,19 +30,35 @@
         </div>
     </div>
 
+    <div id="editPopup" class="popup hidden">
+        <div class="popupContent">
+            <h2>Edit Quote</h2>
+    
+            <div contenteditable="true" id="editQuoteText"></div>
+    
+            <div class="buttonRow">
+                <div class="button" onclick="saveEditedQuote()">Save</div>
+                <div class="button" onclick="closeEditPopup()">Cancel</div>
+            </div>
+        </div>
+    </div>
+
     <div id="pond"></div>
 
     <a href="writing.html">
         <img src="pagoda.png" alt="Pagoda" id="pagoda">
     </a>
 
-    <div id="netHolder"></div>
-    <img src="net.png" id="net">
+    <div id="netHolder">
+        <img src="net.png" id="net">
+    </div>
+
+    <audio id="bgMusic" controls></audio>
     
     <!--
     - Why give something up when you can just work harder?
     - If it gets tough, then just work harder. Everyone wants you to succeed. Everyone
-    - 
+    - Slow down and enjoy life
     -->
 
 </body>

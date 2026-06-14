@@ -6,6 +6,12 @@ const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
 const popup = document.getElementById("popup");
 const addQuoteButton = document.getElementById("addQuoteButton");
 
+let caughtFish = null;
+let caughtFishId = null;
+let editingFish = null;
+let shakeCount = 0;
+let lastMouseX = 0;
+
 if (popup && addQuoteButton) {
     addQuoteButton.addEventListener("click", () => {
         popup.classList.remove("hidden");
@@ -34,13 +40,37 @@ async function submitText() {
 
     const pond = document.getElementById("pond");
 
-    if (pond) {
-        pond.appendChild(createFish(data.id, data.text));
-}
+    const fish = createFish(data.id, data.text, data.created_at);
+    pond.appendChild(fish);
+    startSwimming(fish);
 
     document.getElementById("addMessage").innerText = "";
 
     closePopup();
+}
+
+function openEditPopup() {
+    const quoteText = caughtFish.querySelector(".fishQuote").textContent;
+
+    document.getElementById("editQuoteText").innerText = quoteText;
+
+    editingFish = caughtFish;
+
+    document.getElementById("editPopup").classList.remove("hidden");
+}
+
+function closeEditPopup() {
+    document.getElementById("editPopup").classList.add("hidden");
+}
+
+async function saveEditedQuote() {
+    const newQuote = document.getElementById("editQuoteText").innerText;
+
+    editingFish.querySelector(".fishQuote").textContent = newQuote;
+
+    await db.from("quotes").update({ text: newQuote }).eq("id", caughtFishId);
+
+    closeEditPopup();
 }
 
 function createQuoteElement(id, text) {
@@ -77,7 +107,13 @@ async function loadQuotes() {
     }
 
     data.forEach(q => {
-        pond.appendChild(createFish(q.id, q.text));
+        const fish = createFish(q.id, q.text, q.created_at);
+    
+        pond.appendChild(fish);
+    
+        setTimeout(() => {
+            startSwimming(fish);
+        }, 50);
     });
 }
 
@@ -159,51 +195,94 @@ async function deleteJournal(id, journalElement) {
 loadJournals();
 
 // fish
-function createFish(id, text) {
+function createFish(id, text, createdAt) {
     const fish = document.createElement("div");
     fish.className = "fish";
+    fish.swimming = false;
 
-    fish.innerHTML = `<img src="koi.png" class="koi"><div class="fishQuote">${text}</div>`;
+    fish.innerHTML = `
+    <img src="koi.png" class="koi">
+    <div class="fishQuote">${text}</div>
+    <div class="timestamp">${new Date(createdAt).toLocaleString()}</div>`;
 
     fish.style.left = Math.random() * 700 + "px";
     fish.style.top = Math.random() * 400 + "px";
 
-    fish.addEventListener("click", () => {
+    fish.addEventListener("click", (event) => {
+        event.stopPropagation();
+    
         if (!netEquipped) return;
     
         catchFish(fish, id);
     });
 
-    startSwimming(fish);
-
     return fish;
 }
 
 function startSwimming(fish) {
-    setInterval(() => {
+    if (fish.swimming) return;
+
+    fish.swimming = true;
+
+    function swim() {
+        if (fish.style.display === "none") {
+            fish.swimming = false;
+            return;
+        }
+
+        const currentX = parseFloat(fish.style.left);
+        const currentY = parseFloat(fish.style.top);
+
         const newX = Math.random() * 700;
         const newY = Math.random() * 400;
 
-        fish.style.transition = "5s linear";
+        const distance = Math.hypot(
+            newX - currentX,
+            newY - currentY
+        );
+
+        const speed = 0.025 + Math.random() * 0.01;
+        const swimTime = distance / speed;
+
+        fish.style.transition = `${swimTime}ms linear`;
         fish.style.left = newX + "px";
         fish.style.top = newY + "px";
-    }, 3000 + Math.random() * 4000);
+
+        setTimeout(swim, swimTime);
+    }
+
+    requestAnimationFrame(() => {
+        swim();
+    });
 }
 
 const net = document.getElementById("net");
 
 let netEquipped = false;
 
-const netHolder = document.getElementById("net");
+const netHolder = document.getElementById("netHolder");
 
-netHolder.addEventListener("click", () => {
-    netEquipped = !netEquipped;
+netHolder.addEventListener("click", async (event) => {
+    event.stopPropagation();
 
     if (!netEquipped) {
-        net.style.left = "";
-        net.style.top = "";
-        net.style.right = "20px";
-        net.style.bottom = "20px";
+        netEquipped = true;
+        net.style.pointerEvents = "none";
+    } else {
+        if (caughtFish) {
+            await db.from("quotes").delete().eq("id", caughtFishId);
+        
+            caughtFish.remove();
+        
+            caughtFish = null;
+            caughtFishId = null;
+            shakeCount = 0;
+        
+            net.src = "net.png";
+        }
+        netEquipped = false;
+        returnNetToHolder();
+        net.style.pointerEvents = "auto";
     }
 });
 
@@ -220,13 +299,81 @@ document.addEventListener("mousemove", (event) => {
 });
 
 async function catchFish(fish, id) {
-    await db.from("quotes").delete().eq("id", id);
+    caughtFish = fish;
+    caughtFishId = id;
 
-    fish.remove();
+    fish.style.display = "none";
+    fish.swimming = false;
 
     net.src = "net_with_fish.png";
+}
+
+document.addEventListener("mousemove", async (event) => {
+    if (!netEquipped) return;
+
+    net.style.position = "fixed";
+    net.style.left = event.clientX - 40 + "px";
+    net.style.top = event.clientY - 40 + "px";
+
+    const movement = Math.abs(event.clientX - lastMouseX);
+
+    if (caughtFish && movement > 40) {
+        shakeCount++;
+
+        if (shakeCount >= 15) {
+            shakeCount = 0;
+            openEditPopup();
+        }
+    }
+
+    lastMouseX = event.clientX;
+});
+
+const pond = document.getElementById("pond");
+
+pond.addEventListener("click", () => {
+    if (!caughtFish) return;
+
+    const fish = caughtFish;
+
+    fish.style.display = "";
+
+    fish.swimming = false;
 
     setTimeout(() => {
-        net.src = "net.png";
-    }, 2000);
+        startSwimming(fish);
+    }, 50);
+
+    net.src = "net.png";
+
+    caughtFish = null;
+    caughtFishId = null;
+    shakeCount = 0;
+});
+
+function returnNetToHolder() {
+    net.style.position = "fixed";
+    net.style.left = "";
+    net.style.top = "";
+    net.style.right = "20px";
+    net.style.bottom = "20px";
 }
+
+// music
+const songs = [
+    "song1.mp3",
+    "song2.mp3",
+    "song3.mp3"
+];
+
+let currentSong = 0;
+
+const player = document.getElementById("bgMusic");
+
+player.src = songs[currentSong];
+
+player.addEventListener("ended", () => {
+    currentSong = (currentSong + 1) % songs.length;
+    player.src = songs[currentSong];
+    player.play();
+});

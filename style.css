@@ -28,11 +28,7 @@ h2 {
     background-color: lightblue;
 }
 
-#popup.hidden{
-    display: none;
-}
-
-#popup {
+.popup {
     position: fixed;
     top: 0;
     left: 0;
@@ -45,11 +41,28 @@ h2 {
     z-index: 1000;
 }
 
-#popupContent {
+.popupContent {
     width: 700px;
     background: lightblue;;
     padding: 20px;
     border-radius: 10px;
+}
+
+#editQuoteText {
+    width: 100%;
+    box-sizing: border-box;
+    height: 250px;
+    border: 1px solid black;
+    padding: 10px;
+    margin-bottom: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.hidden {
+    display: none !important;
 }
 
 #output {
@@ -176,4 +189,19 @@ h2 {
     width: 120px;
     height: 120px;
     z-index: 99;
+}
+
+.timestamp {
+    display: none;
+    position: absolute;
+    top: -25px;
+    left: 0;
+    background: white;
+    border: 1px solid black;
+    padding: 4px;
+    font-size: 10px;
+}
+
+.fish:hover .timestamp {
+    display: block;
 }
