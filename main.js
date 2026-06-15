@@ -130,6 +130,56 @@ async function deleteQuote(id, quoteElement) {
     quoteElement.remove();
 }
 
+// spotify
+async function loadSpotifyPlaylist() {
+    const { data, error } = await db.from("settings").select("spotify_url").eq("id", 1).single();
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    document.getElementById("spotifyPlayer").src = data.spotify_url;
+}
+
+loadSpotifyPlaylist();
+
+async function saveSpotifyLink() {
+    let link = document.getElementById("spotifyLink").value.trim();
+
+    if (!link) return;
+
+    link = link.replace("https://open.spotify.com/playlist/", "https://open.spotify.com/embed/playlist/");
+
+    if (!link.includes("?")) {
+        link += "?utm_source=generator";
+    }
+
+    const { error } = await db.from("settings").update({ spotify_url: link }).eq("id", 1);
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    document.getElementById("spotifyPlayer").src = link;
+}
+
+const spotify = document.getElementById("spotify");
+const spotifyToggle = document.getElementById("spotifyToggle");
+
+spotifyToggle.textContent = "❯";
+
+spotifyToggle.addEventListener("click", () => {
+    spotify.classList.toggle("open");
+
+    if (spotify.classList.contains("open")) {
+        spotifyToggle.textContent = "❮";
+    } else {
+        spotifyToggle.textContent = "❯";
+    }
+});
+
 // writing.html JS
 async function addJournal() {
     const text = document.getElementById("journalText").innerText;
@@ -201,7 +251,7 @@ function createFish(id, text, createdAt) {
     fish.swimming = false;
 
     fish.innerHTML = `
-    <img src="koi.png" class="koi">
+    <img src="assets/koi.png" class="koi">
     <div class="fishQuote">${text}</div>
     <div class="timestamp">${new Date(createdAt).toLocaleString()}</div>`;
 
@@ -278,7 +328,7 @@ netHolder.addEventListener("click", async (event) => {
             caughtFishId = null;
             shakeCount = 0;
         
-            net.src = "net.png";
+            net.src = "assets/net.png";
         }
         netEquipped = false;
         returnNetToHolder();
@@ -305,7 +355,7 @@ async function catchFish(fish, id) {
     fish.style.display = "none";
     fish.swimming = false;
 
-    net.src = "net_with_fish.png";
+    net.src = "assets/net_with_fish.png";
 }
 
 document.addEventListener("mousemove", async (event) => {
@@ -344,7 +394,7 @@ pond.addEventListener("click", () => {
         startSwimming(fish);
     }, 50);
 
-    net.src = "net.png";
+    net.src = "assets/net.png";
 
     caughtFish = null;
     caughtFishId = null;
@@ -358,22 +408,3 @@ function returnNetToHolder() {
     net.style.right = "20px";
     net.style.bottom = "20px";
 }
-
-// music
-const songs = [
-    "song1.mp3",
-    "song2.mp3",
-    "song3.mp3"
-];
-
-let currentSong = 0;
-
-const player = document.getElementById("bgMusic");
-
-player.src = songs[currentSong];
-
-player.addEventListener("ended", () => {
-    currentSong = (currentSong + 1) % songs.length;
-    player.src = songs[currentSong];
-    player.play();
-});

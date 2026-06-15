@@ -4,11 +4,24 @@ Add
 - clickable house - page for writing - DONE
 - popup add quote page - DONE
 - make the quotes/inspos fish, they should move around, comes with time stamp - DONE
-- nostalgic music (spotify in corner)
+- nostalgic music (spotify in corner) - people add custom playlist - DONE
+
+- add login - supabase
+- how to put quotes on fish
+- priorities (buffet 20, cross out bottom 17)
+- short, medium, long term goals - (marathon), option to put add themes to put them under
+- diff fish to unlock
+- option to share each of the pages visible to ur friends
+- add todo list? can be like haha I have more stuff to do than u, or send them laughing for not completing something on their todo list to encourage completing stuff
+- add option for hidden stuff on todo list then
+- choose diff backgrounds/themes (clouds)
+- double tap fish it follows you
+
+Fix
+- swim faster after just put back in water
 - depth for fish swimming
 - fish not overlapping?
-- how to put quotes on fish
-- swim faster after just put back in water
+- spotify popout make the top also in the box
 
 Themes
 - page for writing, have some mountain in the distance with a person looking with binoculars takes you to writing when you click it
