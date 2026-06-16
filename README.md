@@ -5,9 +5,8 @@ Add
 - popup add quote page - DONE
 - make the quotes/inspos fish, they should move around, comes with time stamp - DONE
 - nostalgic music (spotify in corner) - people add custom playlist - DONE
+- add login - supabase - DONE
 
-- add login - supabase
-- how to put quotes on fish
 - priorities (buffet 20, cross out bottom 17)
 - short, medium, long term goals - (marathon), option to put add themes to put them under
 - diff fish to unlock
@@ -16,8 +15,12 @@ Add
 - add option for hidden stuff on todo list then
 - choose diff backgrounds/themes (clouds)
 - double tap fish it follows you
+- write what stuff u did in the past year, can connect it or put it under the categories relating to ur goals
+- ultimate productivity app/website - calendar, todolist, basically helps u figure out your priorities
+- see diff career baths (branches)
 
 Fix
+- how to put quotes on fish
 - swim faster after just put back in water
 - depth for fish swimming
 - fish not overlapping?
@@ -42,17 +45,3 @@ Draw
 ![alt text](image-3.png)
 
 koi inspo: ![alt text](image-4.png)
-
-
-*Supabase:*
-create table quotes (
-  id bigint generated always as identity primary key,
-  text text not null,
-  created_at timestamp with time zone default now()
-)
-
-GRANT SELECT, INSERT ON public.quotes TO anon;
-GRANT USAGE ON SCHEMA public TO anon;
-
-GRANT DELETE ON public.quotes TO anon;
-

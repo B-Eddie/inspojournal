@@ -9,6 +9,8 @@
     <script src="main.js" defer></script>
 </head>
 <body>
+    <img id="profileButton" src="assets/default_pfp.png">
+
     <h1>Inspo Journal</h1>
 
 
@@ -45,7 +47,7 @@
 
     <div id="pond"></div>
 
-    <a href="assets/writing.html">
+    <a href="writing.html">
         <img src="assets/pagoda.png" alt="Pagoda" id="pagoda">
     </a>
 
@@ -74,6 +76,47 @@
 
     <div id="netHolder">
         <img src="assets/net.png" id="net">
+    </div>
+
+    <div id="authPopup" class="popup hidden">
+        <div class="popupContent">
+    
+            <h2>Account</h2>
+    
+            <input id="username" placeholder="Username or Email">
+    
+            <input
+                id="password"
+                type="password"
+                placeholder="Password">
+    
+            <div class="buttonRow">
+                <div class="button" onclick="login()">Login</div>
+                <div class="button" onclick="signup()">Sign Up</div>
+                <div class="button" onclick="closeAuthPopup()">Close</div>
+            </div>
+    
+        </div>
+    </div>
+
+    <div id="profilePopup" class="popup hidden">
+        <div class="popupContent">
+    
+            <h2>Profile</h2>
+    
+            <img id="profilePreview" src="assets/default_pfp.png">
+    
+            <input id="newUsername" placeholder="Username">
+    
+            <input id="profilePicture" type="file" accept="image/*">
+    
+            <div class="buttonRow">
+                <div class="button" onclick="saveProfile()">Save</div>
+                <div class="button" onclick="logout()">Logout</div>
+                <div class="button" onclick="closeProfilePopup()">Close</div>
+            </div>
+    
+        </div>
     </div>
     
     <!--

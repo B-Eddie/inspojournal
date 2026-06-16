@@ -408,3 +408,79 @@ function returnNetToHolder() {
     net.style.right = "20px";
     net.style.bottom = "20px";
 }
+
+// profile
+const profileButton = document.getElementById("profileButton");
+
+profileButton.addEventListener("click", async () => {
+    const { data } = await db.auth.getUser();
+
+    if (data.user) {
+        openProfilePopup();
+    } else {
+        document.getElementById("authPopup").classList.remove("hidden");
+    }
+});
+
+function closeAuthPopup() {
+    document.getElementById("authPopup").classList.add("hidden");
+}
+
+async function signup() {
+    const email = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    const { data, error } = await db.auth.signUp({email, password});
+
+    if (error) {
+        alert(error.message);
+        return;
+    }
+
+    alert("Check your email!");
+}
+
+async function login() {
+    const email = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    const { error } = await db.auth.signInWithPassword({email, password});
+
+    if (error) {
+        alert(error.message);
+        return;
+    }
+
+    closeAuthPopup();
+
+    alert("Logged in!");
+}
+
+function openProfilePopup() {
+    document.getElementById("profilePopup").classList.remove("hidden");
+}
+
+function closeProfilePopup() {
+    document.getElementById("profilePopup").classList.add("hidden");
+}
+
+async function logout() {
+    await db.auth.signOut();
+
+    closeProfilePopup();
+
+    alert("Logged out");
+}
+
+async function saveProfile() {
+    const { data } = await db.auth.getUser();
+
+    const username = document.getElementById("newUsername").value;
+
+    await db.from("profiles").upsert({
+            id: data.user.id,
+            username: username
+    });
+
+    alert("Profile updated");
+}
