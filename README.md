@@ -1,5 +1,7 @@
 # inspojournal
 
+
+
 Add
 - clickable house - page for writing - DONE
 - popup add quote page - DONE
@@ -7,17 +9,9 @@ Add
 - nostalgic music (spotify in corner) - people add custom playlist - DONE
 - add login - supabase - DONE
 
-- priorities (buffet 20, cross out bottom 17)
-- short, medium, long term goals - (marathon), option to put add themes to put them under
 - diff fish to unlock
-- option to share each of the pages visible to ur friends
-- add todo list? can be like haha I have more stuff to do than u, or send them laughing for not completing something on their todo list to encourage completing stuff
-- add option for hidden stuff on todo list then
 - choose diff backgrounds/themes (clouds)
 - double tap fish it follows you
-- write what stuff u did in the past year, can connect it or put it under the categories relating to ur goals
-- ultimate productivity app/website - calendar, todolist, basically helps u figure out your priorities
-- see diff career baths (branches)
 
 Fix
 - how to put quotes on fish

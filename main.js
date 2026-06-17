@@ -430,14 +430,24 @@ async function signup() {
     const email = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
-    const { data, error } = await db.auth.signUp({email, password});
+    const { error } = await db.auth.signUp({email, password});
 
     if (error) {
         alert(error.message);
         return;
     }
 
-    alert("Check your email!");
+    const { error: loginError } = await db.auth.signInWithPassword({email, password });
+
+    if (loginError) {
+        alert(loginError.message);
+        return;
+    }
+
+    await loadProfile();
+
+    closeAuthPopup();
+    openProfilePopup();
 }
 
 async function login() {
@@ -451,9 +461,9 @@ async function login() {
         return;
     }
 
-    closeAuthPopup();
+    await loadProfile();
 
-    alert("Logged in!");
+    closeAuthPopup();
 }
 
 function openProfilePopup() {
@@ -461,6 +471,18 @@ function openProfilePopup() {
 }
 
 function closeProfilePopup() {
+    const usernameDiv = document.getElementById("profileUsername");
+    const usernameInput = document.getElementById("newUsername");
+    const button = document.getElementById("usernameButton");
+
+    usernameInput.classList.add("hidden");
+    usernameDiv.classList.remove("hidden");
+
+    button.src = "assets/edit.png";
+    button.onclick = editUsername;
+
+    loadProfile();
+
     document.getElementById("profilePopup").classList.add("hidden");
 }
 
@@ -474,13 +496,125 @@ async function logout() {
 
 async function saveProfile() {
     const { data } = await db.auth.getUser();
+    const user = data.user;
+
+    if (!document.getElementById("newUsername").classList.contains("hidden")) {
+        await saveUsername();
+    }
 
     const username = document.getElementById("newUsername").value;
+    const file = document.getElementById("profilePicture").files[0];
 
-    await db.from("profiles").upsert({
-            id: data.user.id,
-            username: username
-    });
+    if (file) {
+        const extension = file.name.split(".").pop().toLowerCase();
+    
+        if (extension === "heic" || extension === "heif") {
+            alert("HEIC photos are not supported. Please choose a PNG, JPG, JPEG, GIF, or WebP image.");
+            return;
+        }
+    }
+
+    let avatarUrl = null;
+
+    if (file) {
+        const fileName = `${user.id}-${Date.now()}`;
+
+        const { error: uploadError } = await db.storage.from("avatars").upload(fileName, file, { upsert: true });
+
+        if (uploadError) {
+            alert(uploadError.message);
+            return;
+        }
+
+        avatarUrl = db.storage.from("avatars").getPublicUrl(fileName).data.publicUrl;
+    }
+
+    await db.from("profiles").upsert({id: user.id, username, avatar_url: avatarUrl});
+
+    if (avatarUrl) {
+        document.getElementById("profilePreview").src = avatarUrl;
+        document.getElementById("profileButton").src = avatarUrl;
+    }
 
     alert("Profile updated");
 }
+
+async function loadProfile() {
+    const { data } = await db.auth.getUser();
+
+    if (!data.user) return;
+
+    const user = data.user;
+
+    document.getElementById("profileEmail").textContent = user.email;
+
+    const { data: profile } = await db.from("profiles").select("*").eq("id", user.id).single();
+
+    if (!profile) return;
+
+    document.getElementById("profileUsername").textContent = profile.username || "No username";
+    document.getElementById("newUsername").value = profile.username || "";
+
+    if (profile.avatar_url) {
+        document.getElementById("profilePreview").src = profile.avatar_url;
+        document.getElementById("profileButton").src = profile.avatar_url;
+    }
+}
+
+function editUsername() {
+    const usernameDiv = document.getElementById("profileUsername");
+    const usernameInput = document.getElementById("newUsername");
+    const button = document.getElementById("usernameButton");
+
+    usernameInput.value = usernameDiv.textContent;
+
+    usernameDiv.classList.add("hidden");
+    usernameInput.classList.remove("hidden");
+
+    usernameInput.focus();
+
+    button.src = "assets/save.png";
+    button.onclick = saveUsername;
+}
+
+async function saveUsername() {
+    const usernameDiv = document.getElementById("profileUsername");
+    const usernameInput = document.getElementById("newUsername");
+    const button = document.getElementById("usernameButton");
+
+    const username = usernameInput.value.trim();
+
+    if (!username) return;
+
+    const { data } = await db.auth.getUser();
+
+    await db.from("profiles").upsert({id: data.user.id, username});
+
+    usernameDiv.textContent = username;
+
+    usernameInput.classList.add("hidden");
+    usernameDiv.classList.remove("hidden");
+
+    button.src = "assets/edit.png";
+    button.onclick = editUsername;
+}
+
+document.getElementById("newUsername").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        saveUsername();
+    }
+});
+
+const profilePopup = document.getElementById("profilePopup");
+
+profilePopup.addEventListener("click", (event) => {
+    if (event.target === profilePopup) {
+        closeProfilePopup();
+    }
+});
+
+document.getElementById("profilePreview").addEventListener("click", () => {
+    document.getElementById("profilePicture").click();
+});
+
+loadProfile();

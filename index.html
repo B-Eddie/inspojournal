@@ -45,7 +45,9 @@
         </div>
     </div>
 
-    <div id="pond"></div>
+    <div id="pond">
+        <img src="assets/pond.png" id="pondImg">
+    </div>
 
     <a href="writing.html">
         <img src="assets/pagoda.png" alt="Pagoda" id="pagoda">
@@ -105,10 +107,18 @@
             <h2>Profile</h2>
     
             <img id="profilePreview" src="assets/default_pfp.png">
-    
-            <input id="newUsername" placeholder="Username">
-    
+
             <input id="profilePicture" type="file" accept="image/*">
+
+            <div class="usernameRow">
+                <div id="profileUsername"></div>
+            
+                <input id="newUsername" class="hidden">
+            
+                <img id="usernameButton" src="assets/edit.png" onclick="editUsername()">
+            </div>
+
+            <div id="profileEmail" class="profileEmail"></div>
     
             <div class="buttonRow">
                 <div class="button" onclick="saveProfile()">Save</div>
